@@ -44,8 +44,10 @@
    window.open("https://wa.me/"+(c.whatsappNumber||"919390734560")+"?text="+encodeURIComponent(msg),"_blank","noopener");
   }catch(err){payStatus.textContent="Could not submit payment: "+err.message;btn.disabled=!selectedProduct;}
  });
+ const upiPayload="upi://pay?pa="+encodeURIComponent(c.upiId||"")+"&pn="+encodeURIComponent(c.upiPayeeName||"Kainat Tutorials")+"&cu=INR";
  $("upi-id-display").textContent="UPI ID: "+(c.upiId||"Not configured");
- $("upi-pay-link").href="upi://pay?pa="+encodeURIComponent(c.upiId||"")+"&pn="+encodeURIComponent(c.upiPayeeName||"Kainat Tutorials")+"&cu=INR";
+ $("upi-pay-link").href=upiPayload;
+ $("upi-qr-image").src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data="+encodeURIComponent(upiPayload);
  $("refresh-shop").addEventListener("click",()=>loadShop().catch(e=>payStatus.textContent=e.message));
  $("refresh-payment-history").addEventListener("click",()=>loadPaymentHistory());
  async function loadAccess(user){
