@@ -60,7 +60,7 @@
   if(l.error){$("student-lessons").innerHTML='<p class="empty-records">Lesson access is not enabled yet. Your course lessons will appear here after the database access rules are configured.</p>';return;}
   $("student-lessons").innerHTML=l.data?.length?l.data.map(x=>'<article class="record-row"><div><b>'+esc(x.title)+'</b><small>'+esc(x.courses?.title||"Course")+' · '+(x.is_preview?"Free preview":"Course lesson")+'</small>'+(x.description?'<small>'+esc(x.description)+'</small>':"")+'</div>'+(x.video_url?'<a class="text-link" href="'+esc(x.video_url)+'" target="_blank" rel="noopener">Open lesson ↗</a>':'<span class="order-status">Video link not added</span>')+'</article>').join(""):'<p class="empty-records">No lessons added yet.</p>';
  }
- let currentUser=null;
+ 
  async function refreshAll(){if(!currentUser)return;try{await Promise.all([loadCatalog(),loadAccess(currentUser)]);s.textContent="Dashboard refreshed.";}catch(e){s.textContent="Some student information could not load: "+e.message;}}
  (async()=>{const {data:{user}}=await db.auth.getUser();if(!user){location.href="login.html";return;}currentUser=user;const {data:p,error}=await db.from("profiles").select("full_name,role").eq("id",user.id).single();if(error){s.textContent="Could not load your student profile: "+error.message;return;}if(p.role==="admin"){location.href="admin.html";return;}currentUser=user;$("student-welcome").textContent="Welcome, "+(p.full_name||user.email)+". Browse products and view your approved learning resources below.";await refreshAll();})();
  $("refresh-catalog").addEventListener("click",()=>loadCatalog().catch(e=>s.textContent="Could not load products: "+e.message));
