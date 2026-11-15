@@ -1,9 +1,4 @@
-/*
- * Kainat Tutorials public contact configuration.
- * Add the official WhatsApp number in international format, digits only.
- * Example format for India: 91XXXXXXXXXX
- * Do not put private API keys or passwords in this file.
- */
+/* Official Kainat Tutorials contact configuration. Keep secrets out of browser code. */
 window.KAINAT_CONFIG = {
-  whatsappNumber: ""
+  whatsappNumber: "919390734560"
 };
