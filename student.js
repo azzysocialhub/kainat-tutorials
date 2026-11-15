@@ -18,7 +18,7 @@
  }
  $("shop-products").addEventListener("click",e=>{const b=e.target.closest("[data-buy]");if(!b)return;selectedProduct=shopProducts.find(p=>p.id===b.dataset.buy);if(!selectedProduct)return;$("selected-product").innerHTML='<b>'+esc(selectedProduct.title)+'</b> · ₹'+(Number(selectedProduct.price_paise)/100).toFixed(2);$("submit-payment").disabled=false;$("payment-section").scrollIntoView({behavior:"smooth"});});
  async function loadPaymentHistory(){
-  const {data,error}=await db.from("payment_submissions").select("id,status,transaction_ref,created_at,admin_note,orders(amount_paise,currency),products:order_items(product_id)").eq("user_id",currentUser.id).order("created_at",{ascending:false});
+  const {data,error}=await db.from("payment_submissions").select("id,status,transaction_ref,created_at,admin_note,orders(amount_paise,currency)").eq("user_id",currentUser.id).order("created_at",{ascending:false});
   if(error){$("student-payment-history").innerHTML='<p class="empty-records">Payment history is unavailable until the payment database permissions are configured.</p>';return;}
   $("student-payment-history").innerHTML=data?.length?data.map(x=>'<article class="record-row"><div><b>'+esc(x.status.toUpperCase())+' · ₹'+(Number(x.orders?.amount_paise||0)/100).toFixed(2)+'</b><small>Reference: '+esc(x.transaction_ref||"Not supplied")+' · '+esc(new Date(x.created_at).toLocaleString())+'</small>'+(x.admin_note?'<small>Admin note: '+esc(x.admin_note)+'</small>':'')+'</div></article>').join(""):'<p class="empty-records">No payment submissions yet.</p>';
  }
