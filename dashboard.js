@@ -1,0 +1,7 @@
+(() => {
+ const cfg=window.KAINAT_CONFIG||{}, status=document.getElementById("dashboard-status"), welcome=document.getElementById("welcome-text"), content=document.getElementById("dashboard-content");
+ if(!window.supabase||!cfg.supabaseUrl||!cfg.supabasePublishableKey){status.textContent="Supabase configuration is missing.";return;}
+ const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey);
+ document.getElementById("logout-button").addEventListener("click",async()=>{await client.auth.signOut();location.href="login.html";});
+ (async()=>{const {data:{user}}=await client.auth.getUser();if(!user){location.href="login.html";return;}const {data:profile,error}=await client.from("profiles").select("full_name,role").eq("id",user.id).single();if(error||!profile||profile.role!=="admin"){welcome.textContent="This account does not have administrator permission.";status.textContent="Access denied. Sign in with the authorised administrator account.";await client.auth.signOut();return;}welcome.textContent="Signed in as "+(profile.full_name||user.email)+". Manage the Kainat Tutorials learning platform.";document.getElementById("admin-email").textContent=user.email;content.classList.remove("hidden");})();
+})();
